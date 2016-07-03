@@ -1,0 +1,53 @@
+<script type="text/javascript">
+    RED.nodes.registerType('modbus-rtu-config',{
+        category: 'config',
+        color: '#a6bbcf',
+        defaults: {
+            unit_id: {value: "1", required: true, validate: RED.validators.number()},
+            serial_device: {value: "/dev/ttyS0", required: true},
+            serial_speed: {value: "115200", required: true, validate: RED.validators.number()},
+            serial_parity: {value: "N", required: true},
+            serial_databits: {value: "8", required: true, validate: RED.validators.number()},
+            serial_stopbits: {value: "1", required: true, validate: RED.validators.number()}
+        },
+        inputs:0,
+        outputs:0,
+        icon: "modbus-rtu-icon.png",
+        label: function() {
+            return this.name||"modbus RTU config";
+        }
+
+ 
+    });
+</script>
+
+<script type="text/x-red" data-template-name="modbus-rtu-config">
+    <div class="form-row">
+        <label for="node-config-input-unit_id"><i class="icon-bookmark"></i> Unit Id</label>
+        <input type="text" id="node-config-input-unit_id">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-serial_device"><i class="icon-bookmark"></i> Serial Device</label>
+        <input type="text" id="node-config-input-serial_device">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-serial_speed"><i class="icon-bookmark"></i> Serial Speed</label>
+        <input type="text" id="node-config-input-serial_speed">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-serial_parity"><i class="icon-bookmark"></i> Parity</label>
+        <input type="text" id="node-config-input-serial_parity">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-serial_databits"><i class="icon-bookmark"></i> Data Bit Count</label>
+        <input type="text" id="node-config-input-serial_databits">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-serial_stopbits"><i class="icon-bookmark"></i> Stop Bit Count</label>
+        <input type="text" id="node-config-input-serial_stopbits">
+    </div>
+
+</script>
+<script type="text/x-red" data-help-name="modbus-rtu-config">
+   <p>Contains configuration parameters of modbus instance.</p>
+  </script>

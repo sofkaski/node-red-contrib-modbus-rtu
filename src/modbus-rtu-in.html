@@ -1,0 +1,32 @@
+<script type="text/javascript">
+    RED.nodes.registerType('modbus-rtu-in',{
+        category: 'modbus',
+        color: '#a6bbcf',
+        defaults: {
+            name: {value:""},
+            modbusConnection: {value: "", type: "modbus-rtu-config"}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "modbus-rtu-icon.png",
+        label: function() {
+            return this.name||"modbus RTU in";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="modbus-rtu-in">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-modbusConnection"><i class="icon-globe"></i> Modbus connection</label>
+        <input type="text" id="node-input-modbusConnection">
+    </div>
+
+</script>
+
+<script type="text/x-red" data-help-name="modbus-rtu-in">
+   <p>Modbus with RTU protocol.</p>
+</script>
