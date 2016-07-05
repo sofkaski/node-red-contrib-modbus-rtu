@@ -31,7 +31,10 @@ gulp.task('minify', function () {
 
 gulp.task('nodejs', function () {
     return gulp.src('src/*.js')
-        .pipe(gulp.dest('modbus-rtu'));
+      .pipe(jshint())
+      .pipe(jshint.reporter('jshint-stylish'))
+      .pipe(jshint.reporter('fail'))
+      .pipe(gulp.dest('modbus-rtu'));
 });
 
 gulp.task('lint', function() {
