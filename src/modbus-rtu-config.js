@@ -59,6 +59,13 @@ module.exports = function(RED) {
                 callback(null, "Failed to create a serial port");
             }
         };
+        
+        node.close = function() {
+            node.serialPort.close();
+            node.modbusMaster = null;
+            node.serialPort = null;
+        };
+    
     }
     RED.nodes.registerType("modbus-rtu-config",ModbusRTUConfigNode);
 

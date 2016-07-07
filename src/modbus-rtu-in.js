@@ -16,10 +16,11 @@ module.exports = function(RED) {
         var node = this;
         node.name = config.name;
         node.modbusMaster = null;
+        node.modbusConnection = null;
         
         log.info("Instantiated ModbusRTUInNode '" + node.name + "'");
-        var modbusConnection = RED.nodes.getNode(config.modbusConnection);
-        modbusConnection.initializeRTUConnection(
+        node.modbusConnection = RED.nodes.getNode(config.modbusConnection);
+        node.modbusConnection.initializeRTUConnection(
             function (modbusMaster, err) {
                 if (err) {
                     log.error(err);
@@ -34,20 +35,28 @@ module.exports = function(RED) {
             }
         );
 
-        function readHoldingRegisters(slave, startRegister, nbrOfRegisters) {
-            log.info(vsprintf('readHolding registers called with: %s, %s, %s',[slave, startRegister, nbrOfRegisters]));
-            node.modbusMaster.readHoldingRegisters(slave, startRegister, nbrOfRegisters).
-            then(function(data){
-                node.send({'payload': data});
-            }, function(err){
-                log.error('Failure on holding register read: ', err);
-            });
-        }
         node.on('input', function(msg) {
             log.info('Input message:',msg);
-            readHoldingRegisters(msg.payload.slave,msg.payload.startRegister,msg.payload.nbrOfRegisters); 
+            if (msg.topic === "readHoldingRegisters") {
+                node.modbusMaster.readHoldingRegisters(msg.payload.slave,msg.payload.startRegister,msg.payload.nbrOfRegisters).
+                    then(function(data){
+                        node.send({'payload': data});
+                    }, 
+                    function(err){
+                        log.error('Failure on holding register read: ', err);
+                    });
+            }
+            else {
+                log.warn('Unknown input message received');
+            }
         });
- 
+        
+        node.on('close', function() {
+            node.modbusConnection.close();
+            node.modbusMaster = null;
+            node.modbusConnection = null;
+            node.status(ModbusState.UNINITIALIZED);
+        });
 
     }
     
