@@ -21,24 +21,28 @@ module.exports = function(RED) {
         node.on('input', function(msg) {
             
         });
-
-        node.modbusMaster = null;
-        node.serialPort = null;
-        log.info(vsprintf("Defined parameters for device %s (%s baud)", [node.serial_device, node.serial_speed]));
+        var globalContext = this.context().global;
+        var modbusMaster = globalContext.get('modbusMaster') || null;
+        var serialPort = globalContext.get('serialPort') || null;
         
+        if (modbusMaster || serialPort) {
+            node.close();    
+        }
         // connection initialization. Create serial device and then modbus master on top of that
         node.initializeRTUConnection = function(callback) {
             log.info(vsprintf("About to create serial port on device %s (%s baud)", [node.serial_device, node.serial_speed]));
 
-            node.serialPort = new SerialPort(node.serial_device, {
+            serialPort = new SerialPort(node.serial_device, {
                 baudrate: node.serial_speed});
-            if (node.serialPort) {
+            if (serialPort) {
                 log.info("Created the serial port.");
-                new modbus.Master(node.serialPort, function (master) {
+                globalContext.set('serialPort', serialPort);
+                new modbus.Master(serialPort, function (master) {
                     if (master) {
-                        node.modbusMaster = master;
+                        modbusMaster = master;
+                        globalContext.set('modbusMaster', modbusMaster);
                         log.info("Created modbus master device");
-                        callback(node.modbusMaster,null);
+                        callback(modbusMaster,null);
                     }
                     else {
                         callback(null, "Failed to create modbus master device");
@@ -46,11 +50,11 @@ module.exports = function(RED) {
 
                 });
                 // handle serial port open
-                node.serialPort.on('open', function() {
+                serialPort.on('open', function() {
                     log.info("Opened the serial port.");
                 });
                 // handle serial port opening failure
-                node.serialPort.on('error', function(err) {
+                serialPort.on('error', function(err) {
                     log.error('Error: ', err.message);
                 });
                 
@@ -60,10 +64,16 @@ module.exports = function(RED) {
             }
         };
         
+        
         node.close = function() {
-            node.serialPort.close();
-            node.modbusMaster = null;
-            node.serialPort = null;
+            var globalContext = this.context().global;
+            var serialPort = globalContext.get('serialPort') || null;
+            if (serialPort) {
+                serialPort.close();
+            }
+            globalContext.set('serialPort', null);
+            globalContext.set('modbusMaster', null);
+
         };
     
     }

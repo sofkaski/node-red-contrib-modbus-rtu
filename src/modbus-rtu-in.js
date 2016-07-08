@@ -15,19 +15,25 @@ module.exports = function(RED) {
         RED.nodes.createNode(this,config);
         var node = this;
         node.name = config.name;
-        node.modbusMaster = null;
-        node.modbusConnection = null;
         
+        var globalContext = this.context().global;
+        var modbusMaster = globalContext.get('modbusMaster') || null;
+ 
+      
         log.info("Instantiated ModbusRTUInNode '" + node.name + "'");
-        node.modbusConnection = RED.nodes.getNode(config.modbusConnection);
-        node.modbusConnection.initializeRTUConnection(
+        modbusConnection = RED.nodes.getNode(config.modbusConnection);
+        if (!modbusConnection) {
+            var msg = "No modbus connection configuration node found.";
+            log.error(msg);
+            node.error("Aborting", msg);
+        }
+        modbusConnection.initializeRTUConnection(
             function (modbusMaster, err) {
                 if (err) {
                     log.error(err);
                 } 
                 else if (modbusMaster) {
                     node.status(ModbusState.CONNECTED);
-                    node.modbusMaster = modbusMaster;
                 }
                 else {
                     log.error('Modbus connection failed, but no error reported.');
@@ -38,7 +44,8 @@ module.exports = function(RED) {
         node.on('input', function(msg) {
             log.info('Input message:',msg);
             if (msg.topic === "readHoldingRegisters") {
-                node.modbusMaster.readHoldingRegisters(msg.payload.slave,msg.payload.startRegister,msg.payload.nbrOfRegisters).
+                var modbusMaster = this.context().global.get('modbusMaster');
+                    modbusMaster.readHoldingRegisters(msg.payload.slave,msg.payload.startRegister,msg.payload.nbrOfRegisters).
                     then(function(data){
                         node.send({'payload': data});
                     }, 
@@ -52,9 +59,11 @@ module.exports = function(RED) {
         });
         
         node.on('close', function() {
-            node.modbusConnection.close();
-            node.modbusMaster = null;
-            node.modbusConnection = null;
+            var modbusConnection = RED.nodes.getNode(config.modbusConnection);
+            if (modbusConnection) {
+                modbusConnection.close();
+            }
+            modbusMaster = null;
             node.status(ModbusState.UNINITIALIZED);
         });
 
