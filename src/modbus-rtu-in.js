@@ -47,7 +47,7 @@ module.exports = function(RED) {
                 var modbusMaster = this.context().global.get('modbusMaster');
                     modbusMaster.readHoldingRegisters(msg.payload.slave,msg.payload.startRegister,msg.payload.nbrOfRegisters).
                     then(function(data){
-                        node.send({'payload': data});
+                        node.send({"topic": "readHoldingRegisters",'payload': data});
                     }, 
                     function(err){
                         log.error('Failure on holding register read: ', err);
