@@ -42,7 +42,6 @@ module.exports = function(RED) {
         );
 
         node.on('input', function(msg) {
-            log.info('Input message:',msg);
             if (msg.topic === "readHoldingRegisters") {
                 var modbusMaster = this.context().global.get('modbusMaster');
                     modbusMaster.readHoldingRegisters(msg.payload.slave,msg.payload.startRegister,msg.payload.nbrOfRegisters).
@@ -50,7 +49,7 @@ module.exports = function(RED) {
                         node.send({"topic": "readHoldingRegisters",'payload': data});
                     }, 
                     function(err){
-                        log.error('Failure on holding register read: ', err);
+                        log.error('Failure on holding register read: ' + err);
                     });
             }
             else {
