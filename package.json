@@ -20,6 +20,10 @@
       "Modbus-RTU-Config": "modbus-rtu/modbus-rtu-config.js"
     }
   },
+  "main": "node",
+  "files": [
+    "modbus-rtu"
+  ],
   "author": "Jyrki Kaski",
   "license": "Apache-2.0",
   "bugs": {

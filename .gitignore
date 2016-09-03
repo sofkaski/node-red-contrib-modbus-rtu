@@ -36,5 +36,11 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 
+# tar balls
+*.tgz
+
 # Gulp output
 modbus-rtu
+
+# File containing temporary notes during development
+notes.txt
