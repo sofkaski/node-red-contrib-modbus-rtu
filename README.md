@@ -6,6 +6,15 @@ Also, only slik-glove tested using one modbus device connected via RS-485/USB ad
 
 __I would not consider using this yet (Jul-2016)__.
 
+## Building
+ * clone this repo
+ * cd <root directory of the repo>
+ * npm install
+ * gulp publish
+ * npm pack
+
+Result of the previous is a tar ball in the root directory. You can install it with npm install to the target.
+
 ## Configuration
 Configuration through a node-red configuration node.  Serial device, speed, data bit, start and stop bit counts can be defined. 
 Drag the modbus rtu node to a flow and doule-click to edit properties. 
