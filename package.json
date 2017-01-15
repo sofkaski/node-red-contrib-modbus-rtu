@@ -31,8 +31,8 @@
   },
   "homepage": "https://github.com/sofkaski/node-red-contrib-modbus-rtu#readme",
   "dependencies": {
-    "modbus-rtu": "0.0.1",
-    "node-red": "^0.14.3",
+    "modbus-rtu": "0.1.1",
+    "node-red": "^0.16.0",
     "q": "^1.4.1",
     "serialport": "*",
     "sprintf-js": "^1.0.3",
@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "gulp": "^3.9.1",
-    "gulp-htmlmin": "^2.0.0",
+    "gulp-htmlmin": "^3.0.0",
     "gulp-jshint": "^2.0.1",
     "jshint": "^2.9.2",
     "jshint-stylish": "^2.2.0"
