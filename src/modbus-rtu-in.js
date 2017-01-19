@@ -13,7 +13,6 @@ module.exports = function(RED) {
         var Q = require("q");
 
         RED.nodes.createNode(this,config);
-        var node = this;
         this.name = config.name;
 
         log.info("Instantiated ModbusRTUInNode '" + this.name + "'");
@@ -23,12 +22,15 @@ module.exports = function(RED) {
             log.error(msg);
             node.error("Aborting", msg);
         }
+
+
         this.modbusConnection.initializeRTUConnection(
-            function (this.modbusMaster, err) {
+            function (modbusMaster, err) {
                 if (err) {
                     log.error(err);
                 }
-                else if (this.modbusMaster) {
+                else if (modbusMaster) {
+                    this.modbusMaster = modbusMaster;
                     this.status(ModbusState.CONNECTED);
                 }
                 else {

@@ -22,7 +22,7 @@ module.exports = function(RED) {
         });
 
         // connection initialization. Create serial device and then modbus master on top of that
-        this.initializeRTUConnection = function(callback) {
+        this.prototype.initializeRTUConnection = function(callback) {
             log.info(vsprintf("About to create serial port on device %s (%s baud)", [node.serial_device, node.serial_speed]));
 
             this.serialPort = new SerialPort(node.serial_device, {
@@ -33,7 +33,7 @@ module.exports = function(RED) {
                     if (master) {
                         this.modbusMaster = master;
                         log.info("Created modbus master device");
-                        callback(this.modbusMaster,null);
+                        callback(master,null);
                     }
                     else {
                         callback(null, "Failed to create modbus master device");
@@ -56,7 +56,7 @@ module.exports = function(RED) {
         };
 
 
-        this.close = function() {
+        this.prototype.close = function() {
             if (this.serialPort) {
                 this.serialPort.close();
             }
