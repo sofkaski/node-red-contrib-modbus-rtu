@@ -8,41 +8,32 @@ module.exports = function(RED) {
 
 
         RED.nodes.createNode(this,config);
-        var node = this;
-        node.name = config.name;
-        node.dataType = config.dataType;
-        node.unit_id = parseInt(config.unit_id);
-        node.serial_device = config.serial_device;
-        node.serial_speed = parseInt(config.serial_speed);
-        node.serial_parity = config.serial_parity;
-        node.serial_databits = parseInt(config.serial_databits);
-        node.serial_stopbits = parseInt(config.serial_stopbits);
+        this.name = config.name;
+        this.dataType = config.dataType;
+        this.unit_id = parseInt(config.unit_id);
+        this.serial_device = config.serial_device;
+        this.serial_speed = parseInt(config.serial_speed);
+        this.serial_parity = config.serial_parity;
+        this.serial_databits = parseInt(config.serial_databits);
+        this.serial_stopbits = parseInt(config.serial_stopbits);
 
-        node.on('input', function(msg) {
-            
+        this.on('input', function(msg) {
+
         });
-        var globalContext = this.context().global;
-        var modbusMaster = globalContext.get('modbusMaster') || null;
-        var serialPort = globalContext.get('serialPort') || null;
-        
-        if (modbusMaster || serialPort) {
-            node.close();    
-        }
+
         // connection initialization. Create serial device and then modbus master on top of that
-        node.initializeRTUConnection = function(callback) {
+        this.initializeRTUConnection = function(callback) {
             log.info(vsprintf("About to create serial port on device %s (%s baud)", [node.serial_device, node.serial_speed]));
 
-            serialPort = new SerialPort(node.serial_device, {
+            this.serialPort = new SerialPort(node.serial_device, {
                 baudrate: node.serial_speed});
-            if (serialPort) {
+            if (this.serialPort) {
                 log.info("Created the serial port.");
-                globalContext.set('serialPort', serialPort);
-                new modbus.Master(serialPort, function (master) {
+                new modbus.Master(this.serialPort, function (master) {
                     if (master) {
-                        modbusMaster = master;
-                        globalContext.set('modbusMaster', modbusMaster);
+                        this.modbusMaster = master;
                         log.info("Created modbus master device");
-                        callback(modbusMaster,null);
+                        callback(this.modbusMaster,null);
                     }
                     else {
                         callback(null, "Failed to create modbus master device");
@@ -50,34 +41,29 @@ module.exports = function(RED) {
 
                 });
                 // handle serial port open
-                serialPort.on('open', function() {
+                this.serialPort.on('open', function() {
                     log.info("Opened the serial port.");
                 });
                 // handle serial port opening failure
-                serialPort.on('error', function(err) {
+                this.serialPort.on('error', function(err) {
                     log.error('Error: ', err.message);
                 });
-                
+
             }
             else {
                 callback(null, "Failed to create a serial port");
             }
         };
-        
-        
-        node.close = function() {
-            var globalContext = this.context().global;
-            var serialPort = globalContext.get('serialPort') || null;
-            if (serialPort) {
-                serialPort.close();
-            }
-            globalContext.set('serialPort', null);
-            globalContext.set('modbusMaster', null);
 
+
+        this.close = function() {
+            if (this.serialPort) {
+                this.serialPort.close();
+            }
+            this.serialPort = null;
+            this.modbusMaster = null;
         };
-    
+
     }
     RED.nodes.registerType("modbus-rtu-config",ModbusRTUConfigNode);
-
-
 };
