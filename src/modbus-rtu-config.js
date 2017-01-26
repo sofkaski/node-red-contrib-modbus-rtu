@@ -1,6 +1,6 @@
 module.exports = function(RED) {
     function ModbusRTUConfigNode(config) {
-        var SerialPort = require('serialport').SerialPort;
+        var SerialPort = require('serialport');
         var modbus = require('modbus-rtu');
 //        var log = require('tracer').console();
         var vsprintf = require("sprintf-js").vsprintf;
@@ -8,8 +8,6 @@ module.exports = function(RED) {
 
 
         RED.nodes.createNode(this,config);
-        this.name = config.name;
-        this.dataType = config.dataType;
         this.unit_id = parseInt(config.unit_id);
         this.serial_device = config.serial_device;
         this.serial_speed = parseInt(config.serial_speed);
@@ -20,25 +18,26 @@ module.exports = function(RED) {
         this.on('input', function(msg) {
 
         });
+        log.info("Created configuration node with unit_id " + this.unit_id);
 
         // connection initialization. Create serial device and then modbus master on top of that
-        this.prototype.initializeRTUConnection = function(callback) {
-            log.info(vsprintf("About to create serial port on device %s (%s baud)", [node.serial_device, node.serial_speed]));
+        this.initializeRTUConnection = function(callback) {
+            log.info(vsprintf("About to create serial port on device %s (%s baud)", [this.serial_device, this.serial_speed]));
 
-            var serialPort = new SerialPort(node.serial_device, {
-                baudrate: node.serial_speed});
-            this.serialPort = serialPort;
+            this.serialPort = new SerialPort(this.serial_device, {
+                baudrate: this.serial_speed});
             if (this.serialPort) {
                 log.info("Created the serial port.");
                 var master = new modbus.Master(this.serialPort);
                 if (master) {
-                  this.modbusMaster = master;
-                  log.info("Created modbus master device");
-                  callback(this.modbusMaster,null);
+                    this.modbusMaster = master;
+                    log.info("Created modbus master device");
+                    callback(master,null);
                 }
                 else {
                     callback(null, "Failed to create modbus master device");
                 }
+
                 // handle serial port open
                 this.serialPort.on('open', function() {
                     log.info("Opened the serial port.");
@@ -55,7 +54,7 @@ module.exports = function(RED) {
         };
 
 
-        this.prototype.close = function() {
+        this.close = function() {
             if (this.serialPort) {
                 this.serialPort.close();
             }

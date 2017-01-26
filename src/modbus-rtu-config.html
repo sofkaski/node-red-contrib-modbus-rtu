@@ -14,10 +14,11 @@
         outputs:0,
         icon: "modbus-rtu-icon.png",
         label: function() {
-            return this.name||"modbus RTU config";
+            var unit = this.unit_id || "<undefined>"
+            return "modbus" + this.unit_id;
         }
 
- 
+
     });
 </script>
 
