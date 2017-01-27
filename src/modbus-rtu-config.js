@@ -19,18 +19,19 @@ module.exports = function(RED) {
 
         });
         log.info("Created configuration node with unit_id " + this.unit_id);
-        var node = this;
+        var configNode = this;
         // connection initialization. Create serial device and then modbus master on top of that
-        this.initializeRTUConnection = function(callback) {
-            log.info(vsprintf("About to create serial port on device %s (%s baud)", [node.serial_device, node.serial_speed]));
+        configNode.initializeRTUConnection = function(rtuNode, callback) {
+            log.info(vsprintf("About to create serial port on device %s (%s baud)", [configNode.serial_device, configNode.serial_speed]));
 
-            node.serialPort = new SerialPort(node.serial_device, {
-                baudrate: node.serial_speed});
-            if (node.serialPort) {
+            configNode.serialPort = new SerialPort(configNode.serial_device, {
+                baudrate: configNode.serial_speed});
+            if (configNode.serialPort) {
                 log.info("Created the serial port.");
-                var master = new modbus.Master(node.serialPort);
+                var master = new modbus.Master(configNode.serialPort);
                 if (master) {
-                    node.modbusMaster = master;
+                    rtuNode.modbusMaster = master;
+                    configNode.modbusMaster = master;
                     log.info("Created modbus master device");
                     callback(master,null);
                 }
@@ -39,11 +40,11 @@ module.exports = function(RED) {
                 }
 
                 // handle serial port open
-                node.serialPort.on('open', function() {
+                configNode.serialPort.on('open', function() {
                     log.info("Opened the serial port.");
                 });
                 // handle serial port opening failure
-                node.serialPort.on('error', function(err) {
+                configNode.serialPort.on('error', function(err) {
                     log.error('Error: ', err.message);
                 });
 
@@ -54,12 +55,12 @@ module.exports = function(RED) {
         };
 
 
-        this.close = function() {
-            if (this.serialPort) {
-                this.serialPort.close();
+        configNode.close = function() {
+            if (configNode.serialPort) {
+                configNode.serialPort.close();
             }
-            this.serialPort = null;
-            this.modbusMaster = null;
+            configNode.serialPort = null;
+            configNode.modbusMaster = null;
         };
 
     }
