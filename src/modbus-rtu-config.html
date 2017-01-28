@@ -8,7 +8,11 @@
             serial_speed: {value: 9600, required: true, validate: RED.validators.number()},
             serial_parity: {value: "N", required: true},
             serial_databits: {value: 8, required: true, validate: RED.validators.number()},
-            serial_stopbits: {value: 1, required: true, validate: RED.validators.number()}
+            serial_stopbits: {value: 1, required: true, validate: RED.validators.number()},
+            modbus_end_packet_timeout: {value: 15, required: true, validate: RED.validators.number()},
+            modbus_queue_timeout: {value: 50, required: true, validate: RED.validators.number()},
+            modbus_response_timeout: {value: 500, required: true, validate: RED.validators.number()}
+
         },
         inputs:0,
         outputs:0,
@@ -46,6 +50,18 @@
     <div class="form-row">
         <label for="node-config-input-serial_stopbits"><i class="icon-bookmark"></i> Stop Bit Count</label>
         <input type="number" id="node-config-input-serial_stopbits">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-modbus_end_packet_timeout"><i class="icon-bookmark"></i> Modbus end packet timeout (ms)</label>
+        <input type="number" id="node-config-input-modbus_end_packet_timeout">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-modbus_modbus_queue_timeout"><i class="icon-bookmark"></i> Modbus queue timeout (ms)</label>
+        <input type="number" id="node-config-input-modbus_queue_timeout">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-modbus_modbus_response_timeout"><i class="icon-bookmark"></i> Modbus response timeout (ms)</label>
+        <input type="number" id="node-config-input-modbus_response_timeout">
     </div>
 
 </script>

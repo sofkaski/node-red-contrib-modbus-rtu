@@ -14,6 +14,9 @@ module.exports = function(RED) {
         this.serial_parity = config.serial_parity;
         this.serial_databits = parseInt(config.serial_databits);
         this.serial_stopbits = parseInt(config.serial_stopbits);
+        this.modbus_end_packet_timeout = parseInt(config.modbus_end_packet_timeout);
+        this.modbus_queue_timeout = parseInt(config.modbus_queue_timeout);
+        this.modbus_response_timeout = parseInt(config.modbus_response_timeout);
 
         this.on('input', function(msg) {
 
@@ -28,7 +31,11 @@ module.exports = function(RED) {
                 baudrate: configNode.serial_speed});
             if (configNode.serialPort) {
                 log.info("Created the serial port.");
-                var master = new modbus.Master(configNode.serialPort);
+                var master = new modbus.Master(configNode.serialPort, {
+                    endPacketTimeout: configNode.modbus_end_packet_timeout,
+                    queueTimeout: configNode.modbus_queue_timeout,
+                    responseTimeout: configNode.modbus_response_timeout
+                });
                 if (master) {
                     rtuNode.modbusMaster = master;
                     configNode.modbusMaster = master;
