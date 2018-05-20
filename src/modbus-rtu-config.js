@@ -30,7 +30,10 @@ module.exports = function(RED) {
             ]));
 
             configNode.serialPort = new SerialPort(configNode.serial_device, {
-                baudrate: configNode.serial_speed
+                baudRate: configNode.serial_speed,
+                dataBits: configNode.serial_databits,
+                stopBits: configNode.serial_stopbits,
+                parity: configNode.serial_parity
             });
             if (configNode.serialPort) {
                 log.info("Created the serial port.");
