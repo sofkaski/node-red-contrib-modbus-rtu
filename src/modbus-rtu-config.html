@@ -6,7 +6,7 @@
             unit_id: {value: "1", required: true, validate: RED.validators.number()},
             serial_device: {value: "/dev/ttyUSB0", required: true},
             serial_speed: {value: 9600, required: true, validate: RED.validators.number()},
-            serial_parity: {value: "N", required: true},
+            serial_parity: {value: "none", required: true},
             serial_databits: {value: 8, required: true, validate: RED.validators.number()},
             serial_stopbits: {value: 1, required: true, validate: RED.validators.number()},
             modbus_end_packet_timeout: {value: 35, required: true, validate: RED.validators.number()},

@@ -2,12 +2,12 @@ module.exports = function(RED) {
     function ModbusRTUConfigNode(config) {
         var SerialPort = require('serialport');
         var modbus = require('modbus-rtu');
-//        var log = require('tracer').console();
+        //        var log = require('tracer').console();
         var vsprintf = require("sprintf-js").vsprintf;
         var log = RED.log;
 
 
-        RED.nodes.createNode(this,config);
+        RED.nodes.createNode(this, config);
         this.unit_id = parseInt(config.unit_id);
         this.serial_device = config.serial_device;
         this.serial_speed = parseInt(config.serial_speed);
@@ -25,13 +25,19 @@ module.exports = function(RED) {
         var configNode = this;
         // connection initialization. Create serial device and then modbus master on top of that
         configNode.initializeRTUConnection = function(rtuNode, callback) {
-            log.info(vsprintf("About to create serial port on device %s (%s baud)", [configNode.serial_device, configNode.serial_speed]));
+            log.info(vsprintf("About to create serial port on device %s (%s baud)", [configNode.serial_device,
+                configNode.serial_speed
+            ]));
 
             configNode.serialPort = new SerialPort(configNode.serial_device, {
-                baudrate: configNode.serial_speed});
+                baudRate: configNode.serial_speed,
+                dataBits: configNode.serial_databits,
+                stopBits: configNode.serial_stopbits,
+                parity: configNode.serial_parity
+            });
             if (configNode.serialPort) {
                 log.info("Created the serial port.");
-                var master = new modbus.Master(configNode.serialPort, {
+                var master = new modbus.ModbusMaster(configNode.serialPort, {
                     endPacketTimeout: configNode.modbus_end_packet_timeout,
                     queueTimeout: configNode.modbus_queue_timeout,
                     responseTimeout: configNode.modbus_response_timeout
@@ -40,9 +46,8 @@ module.exports = function(RED) {
                     rtuNode.modbusMaster = master;
                     configNode.modbusMaster = master;
                     log.info("Created modbus master device");
-                    callback(master,null);
-                }
-                else {
+                    callback(master, null);
+                } else {
                     callback(null, "Failed to create modbus master device");
                 }
 
@@ -55,8 +60,7 @@ module.exports = function(RED) {
                     log.error('Error: ', err.message);
                 });
 
-            }
-            else {
+            } else {
                 callback(null, "Failed to create a serial port");
             }
         };
@@ -71,5 +75,5 @@ module.exports = function(RED) {
         };
 
     }
-    RED.nodes.registerType("modbus-rtu-config",ModbusRTUConfigNode);
+    RED.nodes.registerType("modbus-rtu-config", ModbusRTUConfigNode);
 };

@@ -1,48 +1,47 @@
 {
-  "name": "node-red-contrib-modbus-rtu",
-  "version": "0.1.0",
-  "description": "Node-RED abstraction of Modbus with RTU protocol",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/sofkaski/node-red-contrib-modbus-rtu.git"
-  },
-  "keywords": [
-    "modbus",
-    "RTU"
-  ],
-  "node-red": {
-    "nodes": {
-      "Modbus-RTU-In": "modbus-rtu/modbus-rtu-in.js",
-      "Modbus-RTU-Config": "modbus-rtu/modbus-rtu-config.js"
+    "name": "node-red-contrib-modbus-rtu",
+    "version": "0.1.2",
+    "description": "Node-RED abstraction of Modbus with RTU protocol",
+    "main": "node",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/sofkaski/node-red-contrib-modbus-rtu.git"
+    },
+    "keywords": [
+        "modbus",
+        "RTU"
+    ],
+    "node-red": {
+        "nodes": {
+            "Modbus-RTU-In": "modbus-rtu/modbus-rtu-in.js",
+            "Modbus-RTU-Config": "modbus-rtu/modbus-rtu-config.js"
+        }
+    },
+    "files": [
+        "modbus-rtu"
+    ],
+    "author": "Jyrki Kaski",
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/sofkaski/node-red-contrib-modbus-rtu/issues"
+    },
+    "homepage": "https://github.com/sofkaski/node-red-contrib-modbus-rtu#readme",
+    "dependencies": {
+        "modbus-rtu": "^0.2.1",
+        "node-red": "^0.18.4",
+        "q": "^1.4.1",
+        "serialport": "*",
+        "sprintf-js": "^1.0.3",
+        "tracer": "^0.8.3"
+    },
+    "devDependencies": {
+        "gulp": "^3.9.1",
+        "gulp-htmlmin": "^4.0.0",
+        "gulp-jshint": "^2.0.4",
+        "jshint": "^2.9.4",
+        "jshint-stylish": "^2.2.0"
     }
-  },
-  "main": "node",
-  "files": [
-    "modbus-rtu"
-  ],
-  "author": "Jyrki Kaski",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/sofkaski/node-red-contrib-modbus-rtu/issues"
-  },
-  "homepage": "https://github.com/sofkaski/node-red-contrib-modbus-rtu#readme",
-  "dependencies": {
-    "modbus-rtu": "0.1.1",
-    "node-red": "^0.16.0",
-    "q": "^1.4.1",
-    "serialport": "*",
-    "sprintf-js": "^1.0.3",
-    "tracer": "^0.8.3"
-  },
-  "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-htmlmin": "^3.0.0",
-    "gulp-jshint": "^2.0.4",
-    "jshint": "^2.9.4",
-    "jshint-stylish": "^2.2.0"
-  }
 }
